@@ -1,6 +1,7 @@
 <?php
 $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 $editing = is_array($control);
+$failoverType = (string) ($control['failover_type'] ?? 'number');
 ?>
 <?php if (!empty($notice)): ?>
 <div class="alert alert-<?php echo $escape($notice['type'] ?? 'info'); ?>" role="alert"><?php echo $escape($notice['message'] ?? ''); ?></div>
@@ -11,7 +12,7 @@ $editing = is_array($control);
 <?php if (!empty($status)): ?>
 <div class="alert alert-<?php echo $escape($status['class']); ?>" role="status"><strong><?php echo $escape($status['label']); ?></strong> &mdash; <?php echo $escape($status['detail']); ?></div>
 <?php endif; ?>
-<form class="fpbx-submit" action="?display=failovercontrol&amp;view=form" method="post">
+<form id="fc-control-form" class="fpbx-submit" action="?display=failovercontrol&amp;view=form" method="post">
     <input type="hidden" name="action" value="save">
     <input type="hidden" name="token" value="<?php echo $escape($csrfToken); ?>">
     <input type="hidden" name="id" value="<?php echo $escape($formId); ?>">
@@ -48,13 +49,13 @@ $editing = is_array($control);
             </select>
             <p class="help-block"><?php echo _('Only the fields for the selected destination type are used.'); ?></p>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-failover-type="number"<?php echo $failoverType !== 'number' ? ' hidden' : ''; ?>>
             <label for="fc-failover-number"><?php echo _('UK Failover Number'); ?></label>
-            <input class="form-control" id="fc-failover-number" name="failover_number" inputmode="tel" value="<?php echo $escape($control['failover_number'] ?? ''); ?>">
+            <input class="form-control" id="fc-failover-number" name="failover_number" inputmode="tel" value="<?php echo $escape($control['failover_number'] ?? ''); ?>"<?php echo $failoverType !== 'number' ? ' disabled' : ''; ?>>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-failover-type="number"<?php echo $failoverType !== 'number' ? ' hidden' : ''; ?>>
             <label for="fc-route"><?php echo _('Outbound Route for UK Number'); ?></label>
-            <select class="form-control" id="fc-route" name="outbound_route_id">
+            <select class="form-control" id="fc-route" name="outbound_route_id"<?php echo $failoverType !== 'number' ? ' disabled' : ''; ?>>
                 <option value=""><?php echo _('Select an outbound route'); ?></option>
                 <?php foreach ($routes as $route): ?>
                 <option value="<?php echo $escape($route['route_id']); ?>" <?php echo (string) ($control['outbound_route_id'] ?? '') === (string) $route['route_id'] ? 'selected' : ''; ?>><?php echo $escape($route['name']); ?></option>
@@ -62,9 +63,9 @@ $editing = is_array($control);
             </select>
             <p class="help-block"><?php echo _('The route must match this UK number. Password-protected, time-conditioned, emergency and chained-destination routes are not supported. Route and trunk dial rules must preserve the same UK destination.'); ?></p>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-failover-type="trunk"<?php echo $failoverType !== 'trunk' ? ' hidden' : ''; ?>>
             <label for="fc-failover-trunk"><?php echo _('Existing Trunk'); ?></label>
-            <select class="form-control" id="fc-failover-trunk" name="failover_trunk_id">
+            <select class="form-control" id="fc-failover-trunk" name="failover_trunk_id"<?php echo $failoverType !== 'trunk' ? ' disabled' : ''; ?>>
                 <option value=""><?php echo _('Select an enabled trunk'); ?></option>
                 <?php if (($control['failover_type'] ?? '') === 'trunk' && !array_filter($failoverTrunks, static fn (array $trunk): bool => (string) $trunk['trunkid'] === (string) ($control['failover_destination_id'] ?? ''))): ?>
                 <option value="<?php echo $escape($control['failover_destination_id']); ?>" selected><?php echo $escape(sprintf(_('Unavailable trunk #%s'), $control['failover_destination_id'])); ?></option>
@@ -75,9 +76,9 @@ $editing = is_array($control);
             </select>
             <p class="help-block"><?php echo _('The same inbound DID is handed to FreePBX Core\'s native trunk destination after the primary attempt qualifies for failover.'); ?></p>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-failover-type="misc_destination"<?php echo $failoverType !== 'misc_destination' ? ' hidden' : ''; ?>>
             <label for="fc-failover-misc"><?php echo _('Miscellaneous Destination'); ?></label>
-            <select class="form-control" id="fc-failover-misc" name="failover_misc_destination_id">
+            <select class="form-control" id="fc-failover-misc" name="failover_misc_destination_id"<?php echo $failoverType !== 'misc_destination' ? ' disabled' : ''; ?>>
                 <option value=""><?php echo _('Select a Miscellaneous Destination'); ?></option>
                 <?php
                 $selectedMiscId = (string) ($control['failover_destination_id'] ?? '');
@@ -119,6 +120,26 @@ $editing = is_array($control);
         <a class="btn btn-default" href="?display=failovercontrol"><?php echo _('Cancel'); ?></a>
     </div>
 </form>
+<script>
+(function () {
+    const form = document.getElementById('fc-control-form');
+    const destinationType = form.querySelector('#fc-failover-type');
+    const groups = form.querySelectorAll('[data-failover-type]');
+
+    function updateDestinationFields() {
+        groups.forEach(function (group) {
+            const active = group.dataset.failoverType === destinationType.value;
+            group.hidden = !active;
+            group.querySelectorAll('input, select, textarea').forEach(function (field) {
+                field.disabled = !active;
+            });
+        });
+    }
+
+    destinationType.addEventListener('change', updateDestinationFields);
+    updateDestinationFields();
+}());
+</script>
 <?php if ($editing): ?>
 <form action="?display=failovercontrol" method="post" onsubmit="return confirm('<?php echo $escape(_('Delete this Failover Control?')); ?>');">
     <input type="hidden" name="action" value="delete">

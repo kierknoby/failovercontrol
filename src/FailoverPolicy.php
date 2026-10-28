@@ -5,7 +5,7 @@ namespace FailoverControl;
 
 final class FailoverPolicy
 {
-    public const MODULE_VERSION = '0.2.0';
+    public const MODULE_VERSION = '0.2.1';
 
     public static function normaliseUkTelephoneNumber(string $number): ?string
     {

@@ -1,4 +1,4 @@
-# Failover Control 0.2.0 for FreePBX 17
+# Failover Control 0.2.1 for FreePBX 17
 
 > **Experimental:** Failover Control is under active development and is not suitable for production systems.
 
@@ -8,11 +8,11 @@ For example: **Inbound Route → Failover Control → Customer PBX trunk**, with
 
 ## Release Status
 
-Version 0.2.0 is a development milestone for further experimental testing. It is unsigned. Local contracts and source inspection cover the implemented behaviour; installation and call handling still require live FreePBX/Asterisk verification.
+Version 0.2.1 is a development milestone for further experimental testing. It is unsigned. Version 0.2.0 has been installed successfully on FreePBX 17 with Asterisk 22.10.1, and its administrative interface loads correctly. Live call handling still requires verification.
 
 ## Compatibility
 
-The current target is FreePBX 17 with Asterisk 20 and a PJSIP primary trunk. FreePBX 16 and other Asterisk versions have not been validated.
+The call-handling development target is FreePBX 17 with Asterisk 20 and a PJSIP primary trunk. Installation and administrative-interface loading have also been confirmed for 0.2.0 on Asterisk 22.10.1; this does not establish call-handling compatibility. FreePBX 16 has not been validated.
 
 ## Requirements
 
@@ -65,6 +65,8 @@ Create a named control under **Applications → Failover Control**:
 6. Select **Failover Control → [Control Name]** in the intended Inbound Route or another compatible FreePBX destination selector, then Apply Config again.
 
 Disabling a control's failover keeps primary routing active. The enable/disable state is stored in the database and requires Apply Config to take effect.
+
+Only the selected destination type's fields are shown. Switching types preserves entered values until saving; inactive fields are excluded from browser validation and submission. Server-side validation remains authoritative.
 
 ### Supported destinations
 
@@ -133,6 +135,14 @@ php -r 'exit(simplexml_load_file("module.xml") === false ? 1 : 0);'
 ```
 
 The contracts require PHP CLI with PDO SQLite, `mbstring` and SimpleXML for the metadata check. They cover policy, persistence, migration, generation, status and lifecycle behaviour using FreePBX/Asterisk doubles. They do not prove Asterisk parser acceptance or successful live calls. Follow [Live Testing](docs/LIVE_TESTING.md) separately and record the results. Development changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+
+The destination-field DOM regression uses Node.js with `jsdom` installed in the development environment (not a module runtime dependency):
+
+```sh
+node tests/destination_fields_contract.js
+```
+
+It renders the actual PHP view and checks field visibility, switching, value retention, validation, submitted fields and repository round-trips. Check the form in the installed FreePBX interface as well.
 
 ## Uninstalling
 

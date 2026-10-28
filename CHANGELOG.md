@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1 - Destination field visibility
+
+- Show only the failover fields relevant to the selected destination type when adding or editing a control.
+- Update visibility immediately on selection changes, retaining entered values until the form is saved.
+- Disable inactive destination fields so they do not participate in browser validation or form submission; retain existing server-side validation and persistence.
+
 ## 0.2.0 - Supervised primary and native failover destinations
 
 - Remove primary trunk membership in outbound routes as a configuration requirement; continue to use Core's supervised trunk macro.

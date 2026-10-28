@@ -2,7 +2,7 @@
 <module>
   <rawname>failovercontrol</rawname>
   <name>Failover Control</name>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   <publisher>Failover Control contributors</publisher>
   <license>GPLv3+</license>
   <licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>

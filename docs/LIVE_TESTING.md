@@ -23,13 +23,14 @@ If `fwconsole ma list` or the command syntax differs on the target, use the Modu
 
 ## Installation
 
-1. Place the reviewed 0.2.0 module files in `/var/www/html/admin/modules/failovercontrol/` (or the site's configured equivalent). From a neutral directory, run `fwconsole ma install failovercontrol`, `fwconsole chown` and `fwconsole reload`. Do not run `fwconsole ma installlocal`: it operates on all local modules, not this individual module.
+1. Place the reviewed 0.2.1 module files in `/var/www/html/admin/modules/failovercontrol/` (or the site's configured equivalent). From a neutral directory, run `fwconsole ma install failovercontrol`, `fwconsole chown` and `fwconsole reload`. Do not run `fwconsole ma installlocal`: it operates on all local modules, not this individual module.
 2. Enable Failover Control in Module Admin. Do not disable or remove any trunk or existing route.
 3. Apply Config once, in the controlled test environment.
 4. Confirm the menu at **Applications → Failover Control**.
 5. Confirm the provider appears in the Inbound Route **Set Destination** selector. Create a test control, select the existing primary PJSIP trunk, configure an approved UK number and eligible route or select an existing trunk/Miscellaneous Destination, and leave the control disabled initially.
 6. Apply Config and inspect the generated contexts below before directing test calls through them.
-7. Check `fwconsole ma list` and `module.xml` both report 0.2.0. Test a new installation and an upgrade from a backed-up legacy controls table separately; confirm names, numbers, routes and condition settings survive the MariaDB migration and a repeated installation.
+7. Check `fwconsole ma list` and `module.xml` both report 0.2.1. Test a new installation and an upgrade from a backed-up legacy controls table separately; confirm names, numbers, routes and condition settings survive the MariaDB migration and a repeated installation.
+8. On Add and Edit, switch between all three destination types. Confirm only the relevant fields are visible, unsaved values survive switching, and saving/reopening retains the selected destination. Inactive fields must not block submission.
 
 ## Read-Only Configuration Inspection
 

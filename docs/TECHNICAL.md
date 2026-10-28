@@ -39,7 +39,7 @@ When Unavailable and No Answer are both selected, the unavailable classifier can
 
 The PDO repository uses prepared statements and stable UUIDv4 identifiers. Schema migration adds `failover_type` (default `number`) and `failover_destination_id` without clearing existing numbers, routes or condition settings. MySQL/MariaDB migrations and indexes are idempotent; SQLite is used only for contract tests.
 
-The development version is 0.2.0 in both `module.xml` and `FailoverPolicy::MODULE_VERSION`. The previous archive's 0.1.0 filename was not the implementation version.
+The development version is 0.2.1 in both `module.xml` and `FailoverPolicy::MODULE_VERSION`. The earlier 0.1.0 review archive contained implementation version 0.2.0.
 
 The status verifier compares saved control fields and current Core trunk/route/target metadata with the fingerprint in the active, non-routing status extension. That fingerprint records the settings used during generation; it is not proof that the routing instructions remain intact. The verifier therefore also checks the active control's complete ordered instruction list, consecutive priorities and labels, including `test_timeout` and `test_timeout_after_ringing`. It accepts Asterisk application-name case differences, not changed arguments, extra calls or arbitrary routing. Disabled controls must contain the primary-only path with no number or native fallback.
 
