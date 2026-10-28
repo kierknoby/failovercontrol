@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <rawname>failovercontrol</rawname>
+  <name>Failover Control</name>
+  <version>0.2.0</version>
+  <publisher>Failover Control contributors</publisher>
+  <license>GPLv3+</license>
+  <licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
+  <category>Applications</category>
+  <description>Supervised PJSIP primary routing with policy-controlled trunk, Miscellaneous Destination or UK-number failover.</description>
+  <menuitems>
+    <failovercontrol needsenginedb="yes">Failover Control</failovercontrol>
+  </menuitems>
+  <depends>
+    <version>17.0</version>
+  </depends>
+  <supported>
+    <version>17.0</version>
+  </supported>
+</module>
