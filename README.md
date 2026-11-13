@@ -1,6 +1,6 @@
 # Failover Control 0.2.1 for FreePBX 17
 
-> **Experimental:** Failover Control is under active development and is not suitable for production systems.
+> **Experimental:** Failover Control is under active development on 13 November 2026 and is not suitable for production systems.
 
 Failover Control (`failovercontrol`) provides named FreePBX destinations which supervise a call through an existing PJSIP primary trunk. When a selected failure condition qualifies, the call passes once to an alternative trunk, Miscellaneous Destination or UK telephone number.
 
